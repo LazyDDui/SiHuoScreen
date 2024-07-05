@@ -1,0 +1,67 @@
+{
+  "name": "lpg_street",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "nuxt build --dotenv .env.prod && node create.js",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare",
+    "lint": "eslint .",
+    "prepare": "husky install",
+    "dev": "nuxt dev --dotenv .env.dev",
+    "prod": "nuxt dev --dotenv .env.prod"
+  },
+  "devDependencies": {
+    "@element-plus/nuxt": "1.0.6",
+    "@nuxtjs/eslint-config-typescript": "12.0.0",
+    "@types/d3": "^7.4.3",
+    "@types/three": "^0.166.0",
+    "dayjs-nuxt": "2.1.9",
+    "eslint": "8.37.0",
+    "eslint-config-prettier": "8.8.0",
+    "husky": "8.0.3",
+    "lint-staged": "13.2.0",
+    "nuxt": "^3.8.1",
+    "prettier": "2.8.7",
+    "typescript": "4.9.5"
+  },
+  "dependencies": {
+    "@amap/amap-jsapi-loader": "1.0.1",
+    "@element-plus/icons-vue": "2.1.0",
+    "@formkit/auto-animate": "^0.8.2",
+    "@pinia-plugin-persistedstate/nuxt": "1.1.2",
+    "@pinia/nuxt": "0.4.4",
+    "@tweenjs/tween.js": "^23.1.2",
+    "autoprefixer": "^10.4.19",
+    "d3": "^7.9.0",
+    "echarts": "5.4.3",
+    "element-plus": "2.4.1",
+    "less": "4.2.0",
+    "less-loader": "11.1.3",
+    "lottie-web": "^5.12.2",
+    "nuxt": "^3.8.1",
+    "pinia": "2.1.7",
+    "postcss": "8.4.38",
+    "postcss-px-to-viewport-8-plugin": "1.2.5",
+    "postcss-pxtorem": "6.1.0",
+    "three": "^0.166.1",
+    "vue": "^3.4.29",
+    "vue-router": "^4.3.3",
+    "vue3-openlayers": "10.0.0",
+    "vue3-scroll-number": "1.0.3"
+  },
+  "lint-staged": {
+    "*.{ts,vue}": [
+      "prettier --write",
+      "eslint --fix"
+    ],
+    "*.{md}": [
+      "prettier --write"
+    ],
+    "*.{css,vue,sccs}": [
+      "prettier --write"
+    ]
+  },
+  "version": "0.0.1"
+}

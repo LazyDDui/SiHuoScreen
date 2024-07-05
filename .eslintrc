@@ -1,0 +1,29 @@
+{
+  "extends": [
+    "eslint:recommended",
+    "@nuxtjs/eslint-config-typescript",
+    "prettier"
+  ],
+  "rules": {
+    "no-console": "off",
+    "no-unused-vars": "warn",
+    "vue/valid-v-on": "off",
+    "import/order": "off",
+    "@typescript-eslint/no-unused-vars": "warn",
+    "no-unneeded-ternary": "off",
+    "spaced-comment": "off",
+    "no-empty": "warn",
+    "eqeqeq": "warn",
+    "object-shorthand": "off",
+    "import/namespace": "off",
+    "lines-between-class-members": "warn",
+    "import/no-named-as-default-member": "warn",
+    "no-var": "warn",
+    "array-callback-return": "warn",
+    "no-unmodified-loop-condition": "off",
+    "require-await":"off",
+    "vue/multi-word-component-names": "off",
+    "no-useless-constructor": "off",
+    "no-prototype-builtins": "off"
+  }
+}

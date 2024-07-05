@@ -1,0 +1,85 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+span {
+    display: inline-block;
+}
+
+.f-b {
+    display: flex;
+    justify-content: space-between;
+}
+
+.f-a {
+    display: flex;
+    justify-content: space-around;
+}
+
+.f-c {
+    display: flex;
+    justify-content: center;
+}
+
+.shine {
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.5), /* 第一层发光，控制发光范围和强度 */ 0 0 10px rgba(255, 255, 255, 0.4), /* 第二层发光，可增加更多层次以增强效果 */ 0 0 15px rgba(255, 255, 255, 0.3), /* 更多层... */ 0 0 20px rgba(255, 255, 255, 0.2),
+    0 0 25px rgba(255, 255, 255, 0.1); /* 更远的发光层，透明度更低 */;
+}
+
+.shine-b {
+    color: rgba(255, 255, 255, 0.8); /* 字体颜色偏白，透明度调整以适应背景 */
+    text-shadow: 0 2px 4px rgba(6, 175, 183, 0.5), /* 阴影颜色为#06afb7，偏移2px向下，模糊距离4px，透明度0.5 */ 0 -2px 4px rgba(6, 175, 183, 0.5), /* 添加上方阴影以增强立体感，参数同上但偏移方向相反 */ 2px 0 4px rgba(6, 175, 183, 0.5), /* 右侧阴影 */ -2px 0 4px rgba(6, 175, 183, 0.5); /* 左侧阴影 */
+}
+
+.g-w {
+    background-image: linear-gradient(to bottom, white, #789ec0);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/*.el-year-table td .cell {*/
+/*    color: #d0caca !important;*/
+/*}*/
+
+.el-date-picker__header-label {
+    color: #d0caca !important;
+
+    &:hover {
+        color: #4acead !important;
+    }
+}
+
+.el-year-table td .cell,
+.el-month-table td .cell,
+.el-date-table th {
+    color: #d0caca !important;
+}
+
+.el-date-table td.current:not(.disabled) .el-date-table-cell__text {
+    background-color: #4acead !important;
+}
+
+.el-input--small .el-input__inner {
+    cursor: pointer;
+}
+
+
+.el-year-table td.current:not(.disabled) .cell,
+.el-month-table td.current:not(.disabled) .cell
+{
+    color: #4acead !important;
+}
+
+.el-year-table td.today .cell {
+    color: #4acead !important;
+}
+
+.el-checkbox__input.is-checked .el-checkbox__inner {
+    background-color: #c98c19 !important;
+    border: #c98c19 !important;
+}
+.el-input__wrapper.is-focus {
+    box-shadow: none !important;
+}

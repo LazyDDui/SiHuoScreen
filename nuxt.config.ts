@@ -51,8 +51,8 @@ export default defineNuxtConfig({
     head: {
       charset: 'UTF-8',
       viewport: 'width=device-width, initial-scale=1.0',
-      title: '大丰',
-      meta: [{ name: '巴通达', content: '巴通达科技有限公司' }],
+      title: 'sihuo',
+      meta: [{ name: 'sihuo', content: 'sihuo' }],
       link: [
         {
           rel: 'icon',

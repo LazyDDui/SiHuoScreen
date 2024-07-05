@@ -57,7 +57,7 @@ export default defineNuxtConfig({
         {
           rel: 'icon',
           type: 'image/x-icon',
-          href: envData.VITE_STATIC + 'lpg/images/icon.jpg'
+          href: "https://img2.baidu.com/it/u=1880667950,4103437526&fm=253&fmt=auto&app=138&f=PNG?w=256&h=256"
         }
       ]
     }

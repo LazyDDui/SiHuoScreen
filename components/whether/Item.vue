@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useMapStore } from '../../store/map'
 import { storeToRefs } from 'pinia'
+import { getStaticPath } from '../../composables/utils'
 
 type WhetherProps = {
   url:string;
@@ -16,7 +17,7 @@ const {weather} = storeToRefs(useMapStore())
 <template>
   <div class="w-container">
     <div class="whe">
-      <img alt="whether" :src="`/lpg/street`+url"/>
+      <img alt="whether" :src="getStaticPath(`/lpg/street`+url)"/>
     </div>
     <div class="desc g-w">{{weather?desc:""}}</div>
   </div>

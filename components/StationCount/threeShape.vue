@@ -1,16 +1,17 @@
 <script setup lang="ts">
 
+import { getStaticPath } from '../../composables/utils'
 </script>
 
 <template>
   <div class="jx">
     <div class="item1">
-      <img style="top: 0" src="/lpg/street/juxing3.png" alt="jx1"/>
-      <img style="top: 0" src="/lpg/street/juxing1.png" alt="jx2"/>
+      <img style="top: 0" :src="getStaticPath('/lpg/street/juxing3.png')" alt="jx1"/>
+      <img style="top: 0" :src="getStaticPath('/lpg/street/juxing1.png')" alt="jx2"/>
     </div>
     <div class="item2">
-      <img src="/lpg/street/juxing2.png" alt="jx3"/>
-      <img src="/lpg/street/juxing4.png" alt="jx4"/>
+      <img :src="getStaticPath('/lpg/street/juxing2.png')" alt="jx3"/>
+      <img :src="getStaticPath('/lpg/street/juxing4.png')" alt="jx4"/>
     </div>
   </div>
 </template>

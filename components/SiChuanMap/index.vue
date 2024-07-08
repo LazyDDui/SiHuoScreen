@@ -16,7 +16,11 @@ import {
   MeshBasicMaterial,
   Mesh,
   Line,
-  Group
+  Group,
+  TextureLoader,
+  BoxGeometry,
+  BackSide,
+  Color
 } from 'three'
 import type {
   Scene as SceneType,
@@ -30,17 +34,18 @@ import { Easing, Tween, update } from '@tweenjs/tween.js'
 import * as d3 from 'd3'
 import { OrbitControls, type OrbitControls as ControlsType } from 'three/examples/jsm/controls/OrbitControls.js'
 import { onBeforeUnmount, onMounted, ref, shallowRef } from 'vue'
+import { getStaticPath } from '../../composables/utils'
 
 defineOptions({
   name: 'SiChuanMap'
 })
 
 const mapConfig = {
-  topMesh: 'rgb(0, 153, 255)',
-  sideMesh: 'rgb(0, 153, 255)',
-  topSelect: 'rgb(21,194,214)',
-  sideSelect: 'rgb(21, 194, 214)',
-  lineColor: 'rgb(21, 195, 215)',
+  topMesh: 'rgb(0, 102, 255)',
+  sideMesh: 'rgb(51, 153, 255)',
+  topSelect: 'rgb(102, 255, 153)',
+  sideSelect: 'rgb(153, 255, 153)',
+  lineColor: '#ffffff',
   sceneBg: 'rgb(6,74,155)'
 }
 
@@ -67,6 +72,11 @@ const lastPick = shallowRef<any>()
 const init = () => {
   // 第一步新建一个场景
   scene = new Scene()
+
+  scene.background = new Color("rgb(0, 0, 51)")
+  scene.castShadow = true
+
+
   Cache.enabled = true
 
   setCamera()
@@ -154,7 +164,7 @@ const loadMapData = () => {
   // 设置 output 格式
   loader.setResponseType('json')
 
-  loader.load('/lpg/GeoJson/china.json', (data) => {
+  loader.load(getStaticPath('/lpg/GeoJson/china.json'), (data) => {
     const jsonData = JSON.parse(JSON.stringify(data))
     generateGeometry(jsonData)
 
@@ -239,8 +249,12 @@ const generateGeometry = (jsonData: Record<any, any>) => {
         )
         // 平面的 style
         const material = new MeshBasicMaterial({
-          color: mapConfig.topMesh
+          color: mapConfig.topMesh,
+          opacity: .8,
+          transparent: true
         })
+
+
         // 3D 斜面的 style
         const material1 = new MeshBasicMaterial({
           color: mapConfig.sideMesh,
@@ -295,7 +309,7 @@ const moveToTargetPosition = (targetPosition: { x: number, y: number, z: number 
 #label {
   position: absolute;
   z-index: 2;
-  background: rgba(0, 77, 46, .7);
+  background: rgb(5, 59, 105);
   padding: 10px;
   color: #ffffff;
   visibility: hidden;

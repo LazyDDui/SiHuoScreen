@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { getStaticPath } from '../../composables/utils'
+
 type StationCountItemProps = {
   url:string;
   desc:string;
@@ -11,7 +13,7 @@ const props =  defineProps<StationCountItemProps>()
 
 <template>
   <div class="station-countItem">
-    <img alt="station-item" :src="`/lpg/street`+url"/>
+    <img alt="station-item" :src="getStaticPath(`/lpg/street`+url)"/>
     <div class="desc">
       {{desc}}
     </div>

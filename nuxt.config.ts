@@ -10,6 +10,7 @@ console.log('当前环境：', envData)
 
 export default defineNuxtConfig({
   devtools: { enabled: false },
+  ssr:false,
   runtimeConfig: {
     apiKey: '', // Default to an empty string, automatically set at runtime using process.env.NUXT_API_KEY
     public: {
@@ -22,7 +23,7 @@ export default defineNuxtConfig({
     // 登陆页构建时预渲
     // '/login': { prerender: true },
     // 针对路径进行接口转发
-    '/lpgadmin/**': {
+    '/api/**': {
       proxy: `${envData.VITE_BASE_URL}/**`
     }
   },
@@ -44,10 +45,11 @@ export default defineNuxtConfig({
     dirs: ['~/components']
   },
   experimental: {
-    payloadExtraction: false   //启用此选项时（默认情况下）提取使用nuxt generate生成的页面的有效负载
+    payloadExtraction: true   //启用此选项时（默认情况下）提取使用nuxt generate生成的页面的有效负载
   },
   app: {
-    baseURL: envData.VITE_STATIC,
+    baseURL: envData.VITE_BASE_URL,
+    buildAssetsDir: envData.VITE_STATIC,
     head: {
       charset: 'UTF-8',
       viewport: 'width=device-width, initial-scale=1.0',

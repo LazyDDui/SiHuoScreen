@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { getStaticPath } from '../../composables/utils'
+
 type GasUserProps = {
   count:number;
 }
@@ -9,10 +11,10 @@ const props = defineProps<GasUserProps>()
 <template>
   <div class="gasCenter">
     <div class="outer">
-      <img class="gasL" alt="left" src="/lpg/street/zongshudiwenL.png"/>
-      <img class="gasR" alt="right" src="/lpg/street/zongshudiwen.png"/>
+      <img class="gasL" alt="left" :src="getStaticPath('/lpg/street/zongshudiwenL.png')"/>
+      <img class="gasR" alt="right" :src="getStaticPath('/lpg/street/zongshudiwen.png')"/>
     </div>
-    <img class="gasC" alt="center" src="/lpg/street/zongshu.png"/>
+    <img class="gasC" alt="center" :src="getStaticPath('/lpg/street/zongshu.png')"/>
     <div class="desc shine">{{count}}</div>
   </div>
 </template>

@@ -3,6 +3,7 @@ import { AbnormalType } from '../../composables/interface'
 import { useV } from '../../composables/commonUseFn/useV'
 import HoverChart from './HoverChart.vue'
 import { ref } from 'vue'
+import { getStaticPath } from '../../composables/utils'
 
 
 type AbnormalChartsProps = {
@@ -56,10 +57,10 @@ const getBottomColor = (): string => {
       <div class="cube6 cube"></div>
     </div>
     <div class="circle">
-      <img alt="c1" class="c c1" src="/lpg/street/tuoyuan1.png" />
-      <img alt="c2" class="c c2" src="/lpg/street/tuoyuan2.png" />
-      <img alt="c3" class="c c3" src="/lpg/street/tuoyuan3.png" />
-      <img alt="c4" class="c c4" src="/lpg/street/tuoyuan4.png" />
+      <img alt="c1" class="c c1" :src="getStaticPath('/lpg/street/tuoyuan1.png')" />
+      <img alt="c2" class="c c2" :src="getStaticPath('/lpg/street/tuoyuan2.png')" />
+      <img alt="c3" class="c c3" :src="getStaticPath('/lpg/street/tuoyuan3.png')" />
+      <img alt="c4" class="c c4" :src="getStaticPath('/lpg/street/tuoyuan4.png')" />
     </div>
     <div class="desc">{{ desc }}</div>
     <transition>

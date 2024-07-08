@@ -47,6 +47,8 @@ Locally preview production build:
 yarn preview
 
 ```
+点击在线访问：
+https://lazyddui.github.io/SiHuoScreen/god/
 
 以下下是运行效果图:
 ![img.png](img.png)
@@ -54,9 +56,7 @@ yarn preview
 
 jenkins下打包部署（使用pm2进行前端项目管理）
 
-热爱开源，如果喜欢该项目，请点小星星，欢迎和四火一起探讨前端知识
-
-开源者：四火
+作者：四火
 联系方式(qq):2313424489
 
 Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.

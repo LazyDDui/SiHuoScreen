@@ -42,6 +42,7 @@ import SiChuanMap from '../../components/SiChuanMap/index'
 import GasCount from '../../components/UseGas/CasCount'
 import Realm from '../../components/Realm/index'
 import { useAutoAnimate } from '@formkit/auto-animate/vue'
+import { getStaticPath } from '../../composables/utils'
 
 useSeoMeta({
   title: '大屏可视化',
@@ -335,7 +336,7 @@ const select = ref('')
 <template>
   <div class="box">
     <div class="header">
-      <img alt="topBg" src="/lpg/street/topbg.png" class="topBg" />
+      <img alt="topBg" :src="getStaticPath('/lpg/street/topbg.png')" class="topBg" />
       <div class="linear"></div>
       <div class="title">
         <i>修仙可视化数据</i>
@@ -362,23 +363,23 @@ const select = ref('')
         :total="delivery.deliverTotal"
         desc="在线汽车"
         title="车辆"
-        url="/lpg/street/car.png"
-        no-url="/lpg/street/carNo.png"
-        small-url="/lpg/street/littleCar.png"
+        :url="getStaticPath('/lpg/street/car.png')"
+        :no-url="getStaticPath('/lpg/street/carNo.png')"
+        :small-url="getStaticPath('/lpg/street/littleCar.png')"
       />
       <Delivery
         :count="delivery.carOnLine"
         :total="delivery.carTotal"
         desc="在线人员"
         title="人员"
-        url="/lpg/street/person.png"
-        no-url="/lpg/street/personNo.png"
-        small-url="/lpg/street/smallPerson.png" />
+        :url="getStaticPath('/lpg/street/person.png')"
+        :no-url="getStaticPath('/lpg/street/personNo.png')"
+        :small-url="getStaticPath('/lpg/street/smallPerson.png')" />
       <Tips desc="客户管理"></Tips>
       <div class="f-b lb">
-        <UseGas :count="Number(customInfo.personCount)" url="/lpg/street/jumin.png" desc="麻瓜" />
+        <UseGas :count="Number(customInfo.personCount)" :url="getStaticPath('/lpg/street/jumin.png')" desc="麻瓜" />
         <CasCenter :count="usrTotal" />
-        <UseGas :count="Number(customInfo.xManCount)" url="/lpg/street/feijumin.png" desc="变种人">
+        <UseGas :count="Number(customInfo.xManCount)" :url="getStaticPath('/lpg/street/feijumin.png')" desc="变种人">
           <GasCount />
         </UseGas>
       </div>
@@ -465,7 +466,10 @@ const select = ref('')
       <search @change="(e)=>alarmForm.alarmType = e" @search="alarmSearch" />
       <AlarmScroll :data="alarmData" @more="more" />
     </div>
-    <SiChuanMap />
+    <client-only>
+      <SiChuanMap />
+    </client-only>
+
     <global />
   </div>
 </template>

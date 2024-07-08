@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import lottie from 'lottie-web'
+import { getStaticPath } from '../../composables/utils'
 
 const lottieBox = ref(null)
 
@@ -11,7 +12,7 @@ onMounted(() => {
       renderer: 'svg',
       loop: true, // 循环播放，默认：true
       autoplay: true, // 自动播放 ，默认true
-      path: "/lpg/lottieJson/emptyAnimation.json"
+      path: getStaticPath('/lpg/lottieJson/emptyAnimation.json')
       // path: 'https://labs.nearpod.com/bodymovin/demo/markus/halloween/markus.json',//网络路径
       // animationData:  '/dafeng/lpg/lottieJson/emptyAnimation.json',//本地路径，优先级更高
     })

@@ -2,6 +2,7 @@
 import { ref, watchEffect } from 'vue'
 import BtdDialog from '../Common/BtdDialog.vue'
 import AutoScroll from '../Common/AutoScroll.vue'
+import { getStaticPath } from '../../composables/utils'
 
 defineOptions({
   name:"Realm"
@@ -39,7 +40,7 @@ watchEffect(()=>{
       <div class="count g-w">{{ sort }}</div>
       <div class="desc g-w">{{ desc }}</div>
     </div>
-    <img v-if="!noRight" alt="jt" src="/lpg/street/jiantou.png" />
+    <img v-if="!noRight" alt="jt" :src="getStaticPath('/lpg/street/jiantou.png')" />
 
     <div class="words">
       <BtdDialog

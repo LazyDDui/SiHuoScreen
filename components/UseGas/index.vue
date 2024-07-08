@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { getStaticPath } from '../../composables/utils'
+
 type GasProps = {
   url:string;
   desc:string;
@@ -11,10 +13,10 @@ const props = defineProps<GasProps>()
 <template>
   <div class="useGas">
     <div class="bg">
-      <img alt="bg-img" class="bg-img" src="/lpg/street/diwen4.png"/>
+      <img alt="bg-img" class="bg-img" :src="getStaticPath('/lpg/street/diwen4.png')"/>
       <img class="info-img" alt="info" :src="url"/>
     </div>
-    <img class="bottom" alt="bottom" src="/lpg/street/dizuo.png"/>
+    <img class="bottom" alt="bottom" :src="getStaticPath('/lpg/street/dizuo.png')"/>
     <div class="desc shine-b">{{desc}}</div>
     <div class="count shine-b">{{count}}</div>
     <slot></slot>

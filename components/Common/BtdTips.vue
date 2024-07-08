@@ -2,6 +2,7 @@
 import { SelectSize } from '../../composables/interface'
 import { useV } from '../../composables/commonUseFn/useV'
 import { onMounted, ref } from 'vue'
+import { getStaticPath } from '../../composables/utils'
 
 type AbnormalTipProps = {
   desc:string;
@@ -35,10 +36,10 @@ onMounted(()=>{
 <template>
   <div v-if="show" class="abnormal" :style="{width:toV(width),height:toV(height),fontSize:toV(fontSize)}" @click="handleChange">
     <transition>
-      <img v-if="active" src="/lpg/street/selected.png" alt="select"/>
+      <img v-if="active" :src="getStaticPath('/lpg/street/selected.png')" alt="select"/>
     </transition>
     <transition>
-      <img v-if="!active" src="/lpg/street/noSelected.png" alt="noSelect"/>
+      <img v-if="!active" :src="getStaticPath('/lpg/street/noSelected.png')" alt="noSelect"/>
     </transition>
     {{desc}}
   </div>

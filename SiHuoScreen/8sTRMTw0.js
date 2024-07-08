@@ -1,1 +1,0 @@
-import{d as s,t as e,v as n}from"./D_lyQAb0.js";const t={key:0,class:"iconfont"},a={key:1,class:"iconfont"},i=s({__name:"IconChange",props:{active:{type:Boolean}},setup(c){return(o,p)=>(e(),n("div",null,[o.active?(e(),n("span",t,"")):(e(),n("span",a,""))]))}});export{i as _};

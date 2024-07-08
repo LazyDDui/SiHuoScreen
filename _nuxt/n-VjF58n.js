@@ -1,0 +1,1 @@
+import{d as e,t,v as o,x as a,y as c,_ as n}from"./CK3y9QcQ.js";const d={class:"tips-container"},_={class:"desc"},p=e({__name:"index",props:{desc:{}},setup(r){return(s,i)=>(t(),o("div",d,[a("div",_,c(s.desc),1)]))}}),m=n(p,[["__scopeId","data-v-d083448d"]]);export{m as default};

@@ -1,0 +1,1 @@
+import{d as o,t,v as a,aa as s,O as r,_ as n}from"./DMPyjocP.js";const p={key:0,class:"optionGroup"},c=o({__name:"OptionGroup",props:{active:{type:Boolean}},setup(_){return(e,d)=>e.active?(t(),a("div",p,[s(e.$slots,"default",{},void 0,!0)])):r("",!0)}}),u=n(c,[["__scopeId","data-v-329107c7"]]);export{u as default};

@@ -17,9 +17,6 @@ import {
   Mesh,
   Line,
   Group,
-  TextureLoader,
-  BoxGeometry,
-  BackSide,
   Color
 } from 'three'
 import type {
@@ -33,6 +30,8 @@ import type {
 import { Easing, Tween, update } from '@tweenjs/tween.js'
 import * as d3 from 'd3'
 import { OrbitControls, type OrbitControls as ControlsType } from 'three/examples/jsm/controls/OrbitControls.js'
+import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry';
+import { Font, FontLoader } from 'three/examples/jsm/loaders/FontLoader'
 import { onBeforeUnmount, onMounted, ref, shallowRef } from 'vue'
 import { getStaticPath } from '../../composables/utils'
 
@@ -54,6 +53,10 @@ const movePosition = {
   end: { x: 0, y: -100, z: 80 }
 }
 
+const fontLoader = new FontLoader();
+let font:Font;
+
+
 
 let scene: SceneType
 let camera: CameraType
@@ -64,6 +67,7 @@ let mouse: Vector2Type
 let map: Object3DType
 let onMouseMove: (event: MouseEvent) => void
 let animateLoop: number
+let threeLabelGroup:Mesh[] = []
 
 const label = ref<HTMLDivElement>()
 const lastPick = shallowRef<any>()
@@ -132,6 +136,7 @@ const setRenderer = () => {
     antialias: true,
     logarithmicDepthBuffer: true
   })
+  renderer.setPixelRatio(window.devicePixelRatio);
   // 设置画布的大小
   renderer.setSize(window.innerWidth, window.innerHeight)
   //这里其实就是canvas 画布  renderer.domElement
@@ -166,13 +171,22 @@ const loadMapData = () => {
 
   loader.load(getStaticPath('/lpg/GeoJson/china.json'), (data) => {
     const jsonData = JSON.parse(JSON.stringify(data))
-    generateGeometry(jsonData)
 
-    animate()
+    // 加载字体
+    fontLoader.load(getStaticPath('/lpg/font/HONOR_Sans_CN_Regular.json'), (loadedFont:Font)=> {
+      font = loadedFont;
+      generateGeometry(jsonData)
+      animate()
+    });
+
+
+
+
   })
 }
 
 const animate = () => {
+
   animateLoop = requestAnimationFrame(animate.bind(this))
   // 通过摄像机和鼠标位置更新射线
   raycaster.setFromCamera(mouse, camera)
@@ -203,13 +217,32 @@ const animate = () => {
   } else {
     label.value.style.visibility = 'hidden'
   }
+  threeLabelGroup.forEach(item=>{
+    console.log(item)
+    item.lookAt(camera.position)
+  })
   controls.update()
   update()
   render()
+
 }
 
 const render = () => {
   renderer.render(scene, camera)
+}
+
+const computeCentroid = (projection, coordinates) => {
+  let xSum = 0; let ySum = 0;
+  let count = 0;
+  for (const polygon of coordinates) {
+    for (const point of polygon) {
+      const projectedPoint = projection(point);
+      xSum += projectedPoint[0];
+      ySum += projectedPoint[1];
+      count++;
+    }
+  }
+  return [xSum / count, ySum / count];
 }
 
 const generateGeometry = (jsonData: Record<any, any>) => {
@@ -222,6 +255,39 @@ const generateGeometry = (jsonData: Record<any, any>) => {
     const province: Object3DType = new Object3D()
     // 每个的 坐标 数组
     const coordinates = elem.geometry.coordinates
+
+
+    // 创建3D标签
+    if (font && elem.properties.name) {
+      const threeLabel = new Mesh(
+        new TextGeometry(elem.properties.name, {
+          font: font,
+          size: 1,
+          height: 0.1,
+          curveSegments: 12,
+          bevelEnabled: true,
+          bevelThickness: 0.03,
+          bevelSize: 0.02,
+          bevelOffset: 0,
+          bevelSegments: 5,
+        }),
+        new MeshBasicMaterial({ color: 0xffffff })
+      );
+
+      // 计算或获取中心点
+      const centerPoint = elem.properties.centroid ?
+        projection(elem.properties.centroid) :
+        computeCentroid(projection, elem.geometry.coordinates);
+
+      // 设置标签位置
+      threeLabel.position.set(centerPoint[0], -centerPoint[1], 10); // z轴位置可以适当调整以确保标签可见
+      threeLabelGroup.push(threeLabel)
+      // 添加标签到省份对象
+      province.add(threeLabel);
+
+    }
+
+
     // 循环坐标数组
     coordinates.forEach((multiPolygon: Record<any, any>) => {
       multiPolygon.forEach((polygon: Record<any, any>) => {

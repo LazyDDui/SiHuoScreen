@@ -1,1 +1,0 @@
-import{_ as t,t as e,v as a,C as _,D as d,x as c}from"./DHLOQ3tM.js";const n={},o=s=>(_("data-v-77b073dc"),s=s(),d(),s),r={class:"gasCount"},i=o(()=>c("div",{class:"hu"},"养老保险20没有w",-1)),p=o(()=>c("div",{class:"hu"},"待遇5险没一金",-1)),h=[i,p];function u(s,l){return e(),a("div",r,h)}const v=t(n,[["render",u],["__scopeId","data-v-77b073dc"]]);export{v as default};

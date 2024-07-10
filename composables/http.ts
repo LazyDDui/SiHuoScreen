@@ -12,55 +12,6 @@ import { useAlert } from './commonUseFn/useAlert'
 type Methods = 'GET' | 'POST' | 'DELETE' | 'PUT'
 
 class HttpRequest {
-  // const baseURL = useRuntimeConfig().public.baseURL;
-  severRequest<T = any>(
-    url: string,
-    method: Methods,
-    data?: any,
-    options?: UseFetchOptions<T>
-  ) {
-    const { showAlert } = useAlert()
-    const cookie = useCookie('sihuo')
-    return new Promise((resolve, reject) => {
-      const newOptions: UseFetchOptions<T> = {
-        //@ts-ignore
-        baseURL: useRuntimeConfig().public.baseURL,
-        // @ts-ignore
-        headers: {
-          isToken: true,
-          Authorization: `Bearer ${cookie.value}`
-        },
-        method: method,
-        ...options
-      }
-      if (method === 'GET' || method === 'DELETE') {
-        newOptions.params = data
-      }
-      if (method === 'POST' || method === 'PUT') {
-        newOptions.body = data
-      }
-      useFetch(url, {
-        ...newOptions,
-        onResponseError(
-          context: FetchContext & { response: FetchResponse<any> }
-        ): Promise<void> | void {
-          console.log(context)
-        }
-      })
-        .then((res) => {
-          resolve(res)
-          if (res.status.value === 'error') {
-            //@ts-ignore
-            showAlert({ message: res.error.value })
-          }
-        })
-        .catch((error) => {
-          showAlert(error)
-          reject(error)
-        })
-    })
-  }
-
   request<T = any>(
     url: string,
     method: Methods,

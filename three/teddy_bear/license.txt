@@ -1,0 +1,11 @@
+Model Information:
+* title:	Teddy Bear
+* source:	https://sketchfab.com/3d-models/teddy-bear-b4dff11b7dfd44769793a2f272c65bf6
+* author:	Giimann (https://sketchfab.com/giimann)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Teddy Bear" (https://sketchfab.com/3d-models/teddy-bear-b4dff11b7dfd44769793a2f272c65bf6) by Giimann (https://sketchfab.com/giimann) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

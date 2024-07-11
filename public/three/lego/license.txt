@@ -1,0 +1,11 @@
+Model Information:
+* title:	Chase Mccain Astronaut (Cutscene Torso)
+* source:	https://sketchfab.com/3d-models/chase-mccain-astronaut-cutscene-torso-d72ee43005cb4b6d849ac6faebfb7348
+* author:	Dr. Heinz Doofenshmirtz (https://sketchfab.com/Dr._Heinz_Doofenshmirtz)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Chase Mccain Astronaut (Cutscene Torso)" (https://sketchfab.com/3d-models/chase-mccain-astronaut-cutscene-torso-d72ee43005cb4b6d849ac6faebfb7348) by Dr. Heinz Doofenshmirtz (https://sketchfab.com/Dr._Heinz_Doofenshmirtz) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

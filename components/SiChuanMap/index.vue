@@ -17,7 +17,15 @@ import {
   Mesh,
   Line,
   Group,
-  Color
+  Color,
+  DirectionalLight,
+  AmbientLight,
+  AnimationMixer,
+  LoopRepeat,
+  TextureLoader,
+  RepeatWrapping,
+  MultiplyOperation,
+  MathUtils
 } from 'three'
 import type {
   Scene as SceneType,
@@ -30,13 +38,13 @@ import type {
 import { Easing, Tween, update } from '@tweenjs/tween.js'
 import * as d3 from 'd3'
 import { OrbitControls, type OrbitControls as ControlsType } from 'three/examples/jsm/controls/OrbitControls.js'
-import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
-import type { GLTFLoader as Gltf } from 'three/examples/jsm/loaders/GLTFLoader';
-
+import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry'
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
+import type { Object3DEventMap } from 'three'
 import { Font, FontLoader } from 'three/examples/jsm/loaders/FontLoader'
-import { onBeforeUnmount, onMounted, ref, shallowRef } from 'vue'
+import { onBeforeUnmount, onMounted, ref } from 'vue'
 import { getStaticPath } from '../../composables/utils'
+import SiHuoLottie from '../Common/SiHuoLottie.vue'
 
 defineOptions({
   name: 'SiChuanMap'
@@ -48,7 +56,7 @@ const mapConfig = {
   topSelect: 'rgb(102, 255, 153)',
   sideSelect: 'rgb(153, 255, 153)',
   lineColor: '#ffffff',
-  sceneBg: 'rgb(6,74,155)'
+  sceneBg: 'rgb(23,23,37)'
 }
 
 const movePosition = {
@@ -56,11 +64,13 @@ const movePosition = {
   end: { x: 0, y: -100, z: 80 }
 }
 
-const fontLoader = new FontLoader();
-let font:Font;
+const yMoveUp = 2
+
+const fontLoader = new FontLoader()
+let font: Font
 
 
-let timer:NodeJS.Timeout
+let timer: NodeJS.Timeout
 let scene: SceneType
 let camera: CameraType
 let renderer: RendererType
@@ -70,20 +80,35 @@ let mouse: Vector2Type
 let map: Object3DType
 let onMouseMove: (event: MouseEvent) => void
 let animateLoop: number
-let gltfLoader:Gltf
-const threeLabelGroup:Mesh[] = []
+
+type ProvinceListProps = Array<Object3DType & { properties: { name: string } }>
+
+const loadedModels = []
+const threeLabelGroup: Mesh[] = []
 
 const label = ref<HTMLDivElement>()
-const lastPick = shallowRef<any>()
+let lastPick: any
+const provinceList: ProvinceListProps = []
+
+const loading = ref(true)
 
 
-const init = () => {
+const init = async () => {
   // 第一步新建一个场景
   scene = new Scene()
+  const light = new AmbientLight(0xffffff) // 环境光
+  scene.add(light)
 
-  scene.background = new Color("rgb(0, 0, 51)")
+  const directionalLight = new DirectionalLight(0xffffff, 1) // 方向光
+  directionalLight.position.set(5, 10, 7.5)
+  scene.add(directionalLight)
+
+  scene.background = new Color(mapConfig.sceneBg)
   scene.castShadow = true
 
+  // const dirLight = new DirectionalLight('rgb(253,253,253)', 5)
+  // dirLight.position.set(10, 10, 5) // 根据需要自行调整位置
+  // scene.add(dirLight)
 
   Cache.enabled = true
 
@@ -112,8 +137,12 @@ const resize = () => {
   renderer.setPixelRatio(window.devicePixelRatio)
 }
 
-onMounted(() => {
-  init()
+onMounted(async () => {
+  await new Promise(resolve => setTimeout(()=>{
+    resolve(init())
+  }, 3000));
+  loading.value = false;
+
   window.addEventListener('resize', resize)
 })
 
@@ -140,7 +169,7 @@ const setRenderer = () => {
     antialias: true,
     logarithmicDepthBuffer: true
   })
-  renderer.setPixelRatio(window.devicePixelRatio);
+  renderer.setPixelRatio(window.devicePixelRatio)
   // 设置画布的大小
   renderer.setSize(window.innerWidth, window.innerHeight)
   //这里其实就是canvas 画布  renderer.domElement
@@ -177,17 +206,16 @@ const loadMapData = () => {
     const jsonData = JSON.parse(JSON.stringify(data))
 
     // 加载字体
-    fontLoader.load(getStaticPath('/lpg/font/HONOR_Sans_CN_Regular.json'), (loadedFont:Font)=> {
-      font = loadedFont;
+    fontLoader.load(getStaticPath('/lpg/font/HONOR_Sans_CN_Regular.json'), (loadedFont: Font) => {
+      font = loadedFont
       generateGeometry(jsonData)
       animate()
-    });
-
-
+    })
 
 
   })
 }
+
 
 const animate = () => {
 
@@ -201,27 +229,41 @@ const animate = () => {
   )
 
   // 恢复上一次清空的
-  if (lastPick.value) {
-    lastPick.value.object.material[0].color.set(mapConfig.topMesh)
-    lastPick.value.object.material[1].color.set(mapConfig.sideMesh)
+  if (lastPick) {
+    lastPick.object.material[0].color.set(mapConfig.topMesh)
+    lastPick.object.material[1].color.set(mapConfig.sideMesh)
   }
-  lastPick.value = null
-  lastPick.value = intersects.find(
+  lastPick = null
+  lastPick = intersects.find(
     (item) => (item.object as any).material && (item.object as any).material.length === 2
   )
 
-  if (lastPick.value) {
-    lastPick.value.object.material[0].color.set(mapConfig.topSelect)
-    lastPick.value.object.material[1].color.set(mapConfig.sideSelect)
-
+  if (lastPick) {
+    lastPick.object.material[0].color.set(mapConfig.topSelect)
+    lastPick.object.material[1].color.set(mapConfig.sideSelect)
     // 显示 label
-    const properties = lastPick.value.object.parent.properties
+    const properties = lastPick.object.parent.properties
+    if (properties) {
+      provinceList.forEach((item) => {
+        if (item.properties.name === properties.name) {
+          item.position.z = yMoveUp
+        } else {
+          item.position.z = 0
+
+        }
+      })
+    }
+
+
     label.value.textContent = properties.name
     label.value.style.visibility = 'visible'
   } else {
     label.value.style.visibility = 'hidden'
+    provinceList.forEach((item: Object3DType & { properties: { name: string } }) => {
+      item.position.z = 0
+    })
   }
-  threeLabelGroup.forEach(item=>{
+  threeLabelGroup.forEach(item => {
     item.lookAt(camera.position)
   })
   controls.update()
@@ -235,17 +277,18 @@ const render = () => {
 }
 
 const computeCentroid = (projection, coordinates) => {
-  let xSum = 0; let ySum = 0;
-  let count = 0;
+  let xSum = 0
+  let ySum = 0
+  let count = 0
   for (const polygon of coordinates) {
     for (const point of polygon) {
-      const projectedPoint = projection(point);
-      xSum += projectedPoint[0];
-      ySum += projectedPoint[1];
-      count++;
+      const projectedPoint = projection(point)
+      xSum += projectedPoint[0]
+      ySum += projectedPoint[1]
+      count++
     }
   }
-  return [xSum / count, ySum / count];
+  return [xSum / count, ySum / count]
 }
 
 const generateGeometry = (jsonData: Record<any, any>) => {
@@ -272,44 +315,41 @@ const generateGeometry = (jsonData: Record<any, any>) => {
           bevelThickness: 0.03,
           bevelSize: 0.02,
           bevelOffset: 0,
-          bevelSegments: 5,
+          bevelSegments: 5
         }),
         new MeshBasicMaterial({ color: 0xffffff })
-      );
+      )
 
       // 计算或获取中心点
       const centerPoint = elem.properties.centroid ?
         projection(elem.properties.centroid) :
-        computeCentroid(projection, elem.geometry.coordinates);
+        computeCentroid(projection, elem.geometry.coordinates)
+
+
+      loadModelAndAddToScene(province, centerPoint)
 
       // 设置标签位置
-      threeLabel.position.set(centerPoint[0], -centerPoint[1], 10); // z轴位置可以适当调整以确保标签可见
+      threeLabel.position.set(centerPoint[0], -centerPoint[1], 10) // z轴位置可以适当调整以确保标签可见
       threeLabelGroup.push(threeLabel)
       // 添加标签到省份对象
-      province.add(threeLabel);
+      province.add(threeLabel)
 
     }
 
-    // 加载GLTF模型
-    // const loader = new GLTFLoader();
-    // loader.load(getStaticPath('/lpg/three/center/scene.gltf'), function(gltf) {
-    //   const model = gltf.scene;
-    //
-    //   // 假设你的地图中心点是[104.0, 37.5]，使用墨卡托投影转换
-    //   const projection = d3.geoMercator().center([104.0, 37.5]).scale(100).translate([0, 0]);
-    //   const centerPoint = projection([104.0, 37.5]);
-    //
-    //   // 根据你的地图比例和视图调整模型位置
-    //   model.position.set(centerPoint[0], -centerPoint[1], 0); // 注意z轴可能需要根据你的场景进行调整
-    //
-    //   // 添加模型到场景
-    //   scene.add(model);
-    // }, undefined, function(error) {
-    //   console.error(error);
-    // });
+
+    // 加载贴图
+    const textureLoader = new TextureLoader()
+    const texture = textureLoader.load(getStaticPath('/lpg/GeoJson/mapPic.jpeg')) // 替换为你的贴图路径
 
 
-
+    texture.wrapS = RepeatWrapping //纹理水平方向的平铺方式
+    texture.wrapT = RepeatWrapping //纹理垂直方向的平铺方式
+    texture.flipY = false // 如果设置为true，纹理在上传到GPU的时候会进行纵向的翻转。默认值为true。
+    texture.rotation =
+      MathUtils.degToRad(45) //rotation纹理将围绕中心点旋转多少度
+    const scale = 0.1
+    texture.repeat.set(scale, scale) //repeat决定纹理在表面的重复次数
+    texture.offset.set(0.5, 0.5) //offset贴图单次重复中的起始偏移量
     // 循环坐标数组
     coordinates.forEach((multiPolygon: Record<any, any>) => {
       multiPolygon.forEach((polygon: Record<any, any>) => {
@@ -335,9 +375,12 @@ const generateGeometry = (jsonData: Record<any, any>) => {
           shape,
           extrudeSettings
         )
+
         // 平面的 style
         const material = new MeshBasicMaterial({
+          map: texture,
           color: mapConfig.topMesh,
+          combine: MultiplyOperation, //如何将表面颜色的结果与环境贴图
           opacity: .8,
           transparent: true
         })
@@ -364,17 +407,70 @@ const generateGeometry = (jsonData: Record<any, any>) => {
       province.properties._centroid = projection(elem.properties.centroid)
     }
     map.add(province)
+    provinceList.push(province as any)
   })
   scene.add(map)
 }
 
 
+const loadModelAndAddToScene = (province: Object3DType, centerPoint: number[]) => {
+  // 如果模型已经加载过，直接使用
+  if (loadedModels.length > 0) {
+    const model = loadedModels[0].clone()
+    adjustModelPosition(model, centerPoint)
+    province.add(model)
+  } else {
+    const gltfLoader = new GLTFLoader()
+    // 否则加载模型
+    gltfLoader.load(getStaticPath('/three/lego/scene.gltf'), (gltf) => {
+      const model = gltf.scene
+
+
+      const animations = gltf.animations
+
+      if (animations.length > 0) {
+        const mixer = new AnimationMixer(model)
+        const action = mixer.clipAction(animations[0])//把该物体需要的动画拿出来
+        action.setLoop(LoopRepeat, 100)//设置只播放一次,THREE.LoopRepeat设置播放多次
+        action.play()
+      }
+
+      model.traverse((child) => {
+        if (child instanceof Mesh) {
+          child.castShadow = true  // 光照是否有阴影
+          child.receiveShadow = true  // 是否接收阴影
+          child.frustumCulled = false
+        }
+      })
+
+      loadedModels.push(model)
+
+      // 调整模型位置
+      adjustModelPosition(model, centerPoint)
+
+      // 添加模型到省份对象
+      province.add(model)
+    }, undefined, (error) => {
+      console.log(error)
+    })
+  }
+}
+
+const adjustModelPosition = (model: Group<Object3DEventMap>, centerPoint: number[]) => {
+  // 根据你的地图比例和视图调整模型位置
+  model.position.set(centerPoint[0], -centerPoint[1], 6)
+  // 可能需要进一步调整，比如旋转或缩放模型
+  model.scale.set(0.05, 0.05, 0.05) // 示例缩放
+  model.rotation.set(Math.PI / 2, 0, 0) // 示例旋转
+}
+
+
 const moveToTargetPosition = (targetPosition: { x: number, y: number, z: number }, duration: number) => {
-  if(timer){
+  if (timer) {
     clearTimeout(timer)
   }
   // 创建一个Tween对象来平滑地改变相机的位置
-  timer = setTimeout(()=>{
+  timer = setTimeout(() => {
     new Tween(camera.position)
       .to(targetPosition, duration) // 目标位置和持续时间
       .easing(Easing.Quadratic.Out) // 缓动函数类型
@@ -383,7 +479,7 @@ const moveToTargetPosition = (targetPosition: { x: number, y: number, z: number 
         camera.lookAt(scene.position)
       })
       .start() // 开始动画
-  },1000)
+  }, 1000)
 
 }
 
@@ -393,12 +489,23 @@ const moveToTargetPosition = (targetPosition: { x: number, y: number, z: number 
 <template>
   <div id="label" ref="label"></div>
   <div id="container"></div>
+  <SiHuoLottie v-if="loading" class="loading" :path="getStaticPath('/lpg/lottieJson/loading.json')"/>
 </template>
 
 <style scoped lang="less">
 #container {
   position: fixed;
 }
+
+.loading {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+  width: 500px;
+  height: 500px;
+}
+
 
 #label {
   position: absolute;

@@ -43,9 +43,10 @@ import GasCount from '../../components/UseGas/CasCount'
 import Realm from '../../components/Realm/index'
 import { useAutoAnimate } from '@formkit/auto-animate/vue'
 import { getStaticPath } from '../../composables/utils'
+import SiHuoLottie from '../../components/Common/SiHuoLottie.vue'
 
 useSeoMeta({
-  title: '大屏可视化',
+  title: 'SIHUO',
   ogTitle: '大屏可视化',
   keywords: '666',
   description: '一个开源可视化模板'
@@ -102,7 +103,7 @@ const plist = [
     count: 90
   }
 ]
-
+const select = ref('')
 const produce = ref(plist)
 const [autoAnimate] = useAutoAnimate()
 
@@ -329,7 +330,7 @@ const evolutionaryProcess = [
   }
 ]
 
-const select = ref('')
+
 
 </script>
 
@@ -466,10 +467,7 @@ const select = ref('')
       <search @change="(e)=>alarmForm.alarmType = e" @search="alarmSearch" />
       <AlarmScroll :data="alarmData" @more="more" />
     </div>
-    <client-only>
-      <SiChuanMap />
-    </client-only>
-
+    <SiChuanMap />
     <global />
   </div>
 </template>
@@ -479,6 +477,7 @@ const select = ref('')
   width: 100%;
   background-color: transparent;
 }
+
 
 .v-enter-active,
 .v-leave-active {

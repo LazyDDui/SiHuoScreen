@@ -31,6 +31,9 @@ import { Easing, Tween, update } from '@tweenjs/tween.js'
 import * as d3 from 'd3'
 import { OrbitControls, type OrbitControls as ControlsType } from 'three/examples/jsm/controls/OrbitControls.js'
 import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+import type { GLTFLoader as Gltf } from 'three/examples/jsm/loaders/GLTFLoader';
+
 import { Font, FontLoader } from 'three/examples/jsm/loaders/FontLoader'
 import { onBeforeUnmount, onMounted, ref, shallowRef } from 'vue'
 import { getStaticPath } from '../../composables/utils'
@@ -57,7 +60,7 @@ const fontLoader = new FontLoader();
 let font:Font;
 
 
-
+let timer:NodeJS.Timeout
 let scene: SceneType
 let camera: CameraType
 let renderer: RendererType
@@ -67,7 +70,8 @@ let mouse: Vector2Type
 let map: Object3DType
 let onMouseMove: (event: MouseEvent) => void
 let animateLoop: number
-let threeLabelGroup:Mesh[] = []
+let gltfLoader:Gltf
+const threeLabelGroup:Mesh[] = []
 
 const label = ref<HTMLDivElement>()
 const lastPick = shallowRef<any>()
@@ -218,7 +222,6 @@ const animate = () => {
     label.value.style.visibility = 'hidden'
   }
   threeLabelGroup.forEach(item=>{
-    console.log(item)
     item.lookAt(camera.position)
   })
   controls.update()
@@ -287,6 +290,25 @@ const generateGeometry = (jsonData: Record<any, any>) => {
 
     }
 
+    // 加载GLTF模型
+    // const loader = new GLTFLoader();
+    // loader.load(getStaticPath('/lpg/three/center/scene.gltf'), function(gltf) {
+    //   const model = gltf.scene;
+    //
+    //   // 假设你的地图中心点是[104.0, 37.5]，使用墨卡托投影转换
+    //   const projection = d3.geoMercator().center([104.0, 37.5]).scale(100).translate([0, 0]);
+    //   const centerPoint = projection([104.0, 37.5]);
+    //
+    //   // 根据你的地图比例和视图调整模型位置
+    //   model.position.set(centerPoint[0], -centerPoint[1], 0); // 注意z轴可能需要根据你的场景进行调整
+    //
+    //   // 添加模型到场景
+    //   scene.add(model);
+    // }, undefined, function(error) {
+    //   console.error(error);
+    // });
+
+
 
     // 循环坐标数组
     coordinates.forEach((multiPolygon: Record<any, any>) => {
@@ -348,15 +370,21 @@ const generateGeometry = (jsonData: Record<any, any>) => {
 
 
 const moveToTargetPosition = (targetPosition: { x: number, y: number, z: number }, duration: number) => {
+  if(timer){
+    clearTimeout(timer)
+  }
   // 创建一个Tween对象来平滑地改变相机的位置
-  new Tween(camera.position)
-    .to(targetPosition, duration) // 目标位置和持续时间
-    .easing(Easing.Quadratic.Out) // 缓动函数类型
-    .onUpdate(() => {
-      // 每次更新时，确保相机看向场景中心
-      camera.lookAt(scene.position)
-    })
-    .start() // 开始动画
+  timer = setTimeout(()=>{
+    new Tween(camera.position)
+      .to(targetPosition, duration) // 目标位置和持续时间
+      .easing(Easing.Quadratic.Out) // 缓动函数类型
+      .onUpdate(() => {
+        // 每次更新时，确保相机看向场景中心
+        camera.lookAt(scene.position)
+      })
+      .start() // 开始动画
+  },1000)
+
 }
 
 

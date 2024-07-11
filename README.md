@@ -50,8 +50,6 @@ yarn preview
 点击在线访问：
 https://lazyddui.github.io/SiHuoScreen/god/
 
-以下下是运行效果图:
-![img.png](img.png)
 
 
 jenkins下打包部署（使用pm2进行前端项目管理）

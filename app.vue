@@ -1,3 +1,3 @@
 <template>
-  <NuxtPage :keepalive='{max:6}'/>
+  <NuxtPage :keepalive='{max:10}'/>
 </template>

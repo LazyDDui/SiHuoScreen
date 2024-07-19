@@ -1,1 +1,0 @@
-import{l as a}from"./1_Ojsesg.js";import{d as n,r,o as i,t as l,v as p}from"./C3huOn_u.js";const f=n({name:"SiHuoLottie",__name:"SiHuoLottie",props:{path:{}},setup(o){const t=o,e=r(null);return i(()=>{e.value&&a.loadAnimation({container:e.value,renderer:"svg",loop:!0,autoplay:!0,path:t.path})}),(s,u)=>(l(),p("div",{ref_key:"lottieBox",ref:e},null,512))}});export{f as _};

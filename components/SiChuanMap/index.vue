@@ -240,6 +240,11 @@ const animate = () => {
     scene.children,
     true
   )
+  if(loadOver){
+    for(const i of actionAni){
+      i.update(0.0166666666)
+    }
+  }
 
   // 恢复上一次清空的
   if (lastPick) {
@@ -309,7 +314,7 @@ const generateGeometry = (jsonData: Record<any, any>) => {
   map = new Object3D()
   // 墨卡托投影转换
   const projection = d3.geoMercator().center([104.0, 37.5]).scale(100).translate([0, 0])
-  jsonData.features.forEach((elem: Record<any, any>) => {
+  jsonData.features.forEach((elem: Record<any, any>,index:number,arr:Record<any, any>[]) => {
     // 定一个省份3D对象
     const province: Object3DType = new Object3D()
     // 每个的 坐标 数组
@@ -339,7 +344,7 @@ const generateGeometry = (jsonData: Record<any, any>) => {
         computeCentroid(projection, elem.geometry.coordinates)
 
 
-      loadModelAndAddToScene(province, centerPoint)
+      loadModelAndAddToScene(province, centerPoint,arr.length,index)
 
       // 设置标签位置
       threeLabel.position.set(centerPoint[0], -centerPoint[1], 10) // z轴位置可以适当调整以确保标签可见
@@ -425,8 +430,12 @@ const generateGeometry = (jsonData: Record<any, any>) => {
   scene.add(map)
 }
 
+const actionAni = []
 
-const loadModelAndAddToScene = (province: Object3DType, centerPoint: number[]) => {
+let loadOver = false
+
+
+const loadModelAndAddToScene = (province: Object3DType, centerPoint: number[],len:number,index:number) => {
   // 如果模型已经加载过，直接使用
   if (loadedModels.length > 0) {
     const model = loadedModels[0].clone()
@@ -435,16 +444,22 @@ const loadModelAndAddToScene = (province: Object3DType, centerPoint: number[]) =
   } else {
     const gltfLoader = new GLTFLoader()
     // 否则加载模型
-    gltfLoader.load(getStaticPath('/three/lego/scene.gltf'), (gltf) => {
+    gltfLoader.load(getStaticPath('/three/banana_dancing_fortnite/scene.gltf'), (gltf) => {
       const model = gltf.scene
 
-
+      let mixer
       const animations = gltf.animations
-
       if (animations.length > 0) {
-        const mixer = new AnimationMixer(model)
-        const action = mixer.clipAction(animations[0])//把该物体需要的动画拿出来
-        action.setLoop(LoopRepeat, 100)//设置只播放一次,THREE.LoopRepeat设置播放多次
+        mixer = new AnimationMixer(model)
+        let action
+        if(index<10){
+          action = mixer.clipAction(animations[0])//把该物体需要的动画拿出来
+        }else if(index<20){
+          action = mixer.clipAction(animations[2])//把该物体需要的动画拿出来
+        }else {
+          action = mixer.clipAction(animations[1])//把该物体需要的动画拿出来
+        }
+        action.setLoop(LoopRepeat)//设置只播放一次,THREE.LoopRepeat设置播放多次
         action.play()
       }
 
@@ -456,6 +471,10 @@ const loadModelAndAddToScene = (province: Object3DType, centerPoint: number[]) =
         }
       })
 
+      actionAni.push(mixer)
+      if(actionAni.length === len-1){
+        loadOver = true
+      }
       loadedModels.push(model)
 
       // 调整模型位置
@@ -463,6 +482,7 @@ const loadModelAndAddToScene = (province: Object3DType, centerPoint: number[]) =
 
       // 添加模型到省份对象
       province.add(model)
+
     }, undefined, (error) => {
       console.log(error)
     })
@@ -473,7 +493,7 @@ const adjustModelPosition = (model: Group<Object3DEventMap>, centerPoint: number
   // 根据你的地图比例和视图调整模型位置
   model.position.set(centerPoint[0], -centerPoint[1], 6)
   // 可能需要进一步调整，比如旋转或缩放模型
-  model.scale.set(0.05, 0.05, 0.05) // 示例缩放
+  model.scale.set(2, 2, 2) // 示例缩放
   model.rotation.set(Math.PI / 2, 0, 0) // 示例旋转
 }
 

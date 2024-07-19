@@ -8,7 +8,7 @@
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
     "lint": "eslint .",
-    "prepare": "husky install",
+    "prepare": "husky instalççl",
     "dev": "nuxt dev --dotenv .env.dev",
     "prod": "nuxt dev --dotenv .env.prod",
     "deploy": "gh-pages --dotfiles -d .output/public"

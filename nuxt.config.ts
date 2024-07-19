@@ -11,6 +11,7 @@ console.log('当前环境：', envData)
 export default defineNuxtConfig({
   devtools: { enabled: false },
   ssr:false,
+
   runtimeConfig: {
     apiKey: '', // Default to an empty string, automatically set at runtime using process.env.NUXT_API_KEY
     public: {
@@ -19,6 +20,7 @@ export default defineNuxtConfig({
       ...envData
     }
   },
+
   routeRules: {
     // 登陆页构建时预渲
     // '/login': { prerender: true },
@@ -27,12 +29,14 @@ export default defineNuxtConfig({
       proxy: `${envData.VITE_BASE_URL}/**`
     }
   },
+
   modules: [
     '@element-plus/nuxt',
     '@pinia/nuxt',
     '@pinia-plugin-persistedstate/nuxt',
     '@formkit/auto-animate/nuxt'
   ],
+
   css: [
     '@/assets/css/main.css',
     'element-plus/dist/index.css',
@@ -40,13 +44,16 @@ export default defineNuxtConfig({
     'vue3-scroll-number/css',
     // 'vue3-openlayers/styles.css'
   ],
+
   components: {
     global: true,
     dirs: ['~/components']
   },
+
   experimental: {
     payloadExtraction: true   //启用此选项时（默认情况下）提取使用nuxt generate生成的页面的有效负载
   },
+
   app: {
     baseURL: envData.VITE_BASE_URL,
     buildAssetsDir: envData.VITE_STATIC,
@@ -64,12 +71,15 @@ export default defineNuxtConfig({
       ]
     }
   },
+
   build: {
     transpile: ['three','d3']
   },
+
   vite: {
     envDir: '~/env' // 指定env文件夹
   },
+
   plugins: [
     {
       src: '~/plugins/cookie'
@@ -88,6 +98,7 @@ export default defineNuxtConfig({
       src: '~/plugins/iconfont'
     }
   ],
+
   // 本地代理跨域
   nitro: {
     // 客户端渲染时
@@ -99,10 +110,12 @@ export default defineNuxtConfig({
       }
     }
   },
+
   devServer: {
     host: '0,0,0,0',
     port: 3333
   },
+
   postcss: {
     plugins: {
       // 这个工具可以实现自动添加CSS3前缀
@@ -124,5 +137,7 @@ export default defineNuxtConfig({
         landscape: false // 是否处理横屏情况
       }
     }
-  }
+  },
+
+  compatibilityDate: '2024-07-19'
 })

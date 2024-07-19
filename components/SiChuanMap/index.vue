@@ -451,14 +451,8 @@ const loadModelAndAddToScene = (province: Object3DType, centerPoint: number[],le
       const animations = gltf.animations
       if (animations.length > 0) {
         mixer = new AnimationMixer(model)
-        let action
-        if(index<10){
-          action = mixer.clipAction(animations[0])//把该物体需要的动画拿出来
-        }else if(index<20){
-          action = mixer.clipAction(animations[2])//把该物体需要的动画拿出来
-        }else {
-          action = mixer.clipAction(animations[1])//把该物体需要的动画拿出来
-        }
+
+        const action = mixer.clipAction(animations[Math.floor(Math.random() * 3)])//把该物体需要的动画拿出来
         action.setLoop(LoopRepeat)//设置只播放一次,THREE.LoopRepeat设置播放多次
         action.play()
       }

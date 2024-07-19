@@ -337,7 +337,9 @@ const evolutionaryProcess = [
 <template>
   <div class="box">
     <div class="header">
+      <img alt="headBg" :src="getStaticPath('/lpg/images/headBg.png')" class="topBg" style="height: 8vh"/>
       <img alt="topBg" :src="getStaticPath('/lpg/street/topbg.png')" class="topBg" />
+
       <div class="linear"></div>
       <div class="title">
         <i>修仙可视化数据</i>
@@ -346,7 +348,7 @@ const evolutionaryProcess = [
       <Scene />
       <CountUp />
     </div>
-    <div class="left">
+    <div class="left" :style="{backgroundImage:`url(${getStaticPath('/lpg/images/bg.png')})`}">
       <Tips desc="监管"></Tips>
       <station-count :count="totalCount" />
       <div ref="autoAnimate" class="f-a" style="width: 80%;margin: 0 auto">
@@ -386,7 +388,7 @@ const evolutionaryProcess = [
       </div>
 
     </div>
-    <div class="right">
+    <div class="right" :style="{backgroundImage:`url(${getStaticPath('/lpg/images/bg.png')})`}">
       <Tips desc="变异量"></Tips>
       <div class="f-a" style="width: 100%;">
         <BtdTips
@@ -579,6 +581,8 @@ const evolutionaryProcess = [
 }
 
 .left {
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
   width: 30vw;
   height: 92vh;
   background-color: rgba(6, 29, 43, .9);
@@ -600,6 +604,8 @@ const evolutionaryProcess = [
 }
 
 .right {
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
   width: 30vw;
   height: 92vh;
   background-color: rgba(6, 29, 43, .9);

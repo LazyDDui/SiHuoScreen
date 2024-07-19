@@ -25,7 +25,7 @@ import {
   TextureLoader,
   RepeatWrapping,
   MultiplyOperation,
-  MathUtils
+  MathUtils, LinearFilter, NearestFilter, PlaneGeometry
 } from 'three'
 import type {
   Scene as SceneType,
@@ -45,6 +45,7 @@ import { Font, FontLoader } from 'three/examples/jsm/loaders/FontLoader'
 import { onBeforeUnmount, onMounted, ref } from 'vue'
 import { getStaticPath } from '../../composables/utils'
 import SiHuoLottie from '../Common/SiHuoLottie.vue'
+import { texture } from 'three/examples/jsm/nodes/accessors/TextureNode'
 
 defineOptions({
   name: 'SiChuanMap'
@@ -52,7 +53,7 @@ defineOptions({
 
 const mapConfig = {
   topMesh: 'rgb(0, 102, 255)',
-  sideMesh: 'rgb(51, 153, 255)',
+  sideMesh: 'rgb(0,83,159)',
   topSelect: 'rgb(102, 255, 153)',
   sideSelect: 'rgb(153, 255, 153)',
   lineColor: '#ffffff',
@@ -67,6 +68,15 @@ const movePosition = {
 const yMoveUp = 2
 
 const fontLoader = new FontLoader()
+// 加载纹理
+const screenBg = new TextureLoader();
+const backgroundTexture = screenBg.load(getStaticPath("/lpg/images/screenBg.jpg"),(texture)=>{
+  texture.minFilter = LinearFilter; // 避免缩小时的模糊
+  texture.magFilter = NearestFilter; // 避免放大时的模糊
+  texture.colorSpace = "srgb"
+});
+
+
 let font: Font
 
 
@@ -99,12 +109,15 @@ const init = async () => {
   const light = new AmbientLight(0xffffff) // 环境光
   scene.add(light)
 
+
   const directionalLight = new DirectionalLight(0xffffff, 1) // 方向光
   directionalLight.position.set(5, 10, 7.5)
   scene.add(directionalLight)
 
-  scene.background = new Color(mapConfig.sceneBg)
+  // scene.background = new Color(mapConfig.sceneBg)
+  scene.background = backgroundTexture
   scene.castShadow = true
+
 
   // const dirLight = new DirectionalLight('rgb(253,253,253)', 5)
   // dirLight.position.set(10, 10, 5) // 根据需要自行调整位置
